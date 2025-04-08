@@ -1,0 +1,64 @@
+services:
+  frontend:
+    image: react-pet
+    container_name: pet-react-compose-container
+    ports:
+      - "5173:80"
+    networks:
+      - my-network
+
+  api-server:
+    image: spring-pet
+    container_name: pet-spring-compose-container
+    volumes:
+      - ${IMAGE_VOLUME}
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://pet-mysql-compose-container:3306/${MYSQL_DATABASE}
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+      SPRING_REDIS_HOST: ${REDIS_HOST}
+      SPRING_REDIS_PORT: ${REDIS_PORT}
+    ports:
+      - "18087:8087"
+    networks:
+      - my-network
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: pet-mysql
+    container_name: pet-mysql-compose-container
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "13306:3306"
+    volumes:
+      - pet-mysql-data:/var/lib/mysql
+    networks:
+      - my-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: pet-redis-compose-container
+    ports:
+      - "6379:6379"
+    networks:
+      - my-network
+
+volumes:
+  pet-mysql-data:
+    external: true # 기존 볼륨을 사용할 경우 true
+
+networks:
+  my-network:
+    external: true # 기존 네트워크에 합류
+
+# run
+# docker compose --env-file .env up -d
+
+# 서비스 종료
+# docker compose down
