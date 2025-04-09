@@ -13,7 +13,7 @@ services:
     volumes:
       - ${IMAGE_VOLUME}
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://pet-mysql-compose-container:3306/${MYSQL_DATABASE}
+      SPRING_DATASOURCE_URL: jdbc:mysql://${IP_ADRESSS}:3306/${MYSQL_DATABASE}
       SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
       SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
       SPRING_REDIS_HOST: ${REDIS_HOST}
@@ -23,23 +23,23 @@ services:
     networks:
       - my-network
     depends_on:
-      - db
+      # - db
       - redis
 
-  db:
-    image: handonggil/pet-mysql:latest
-    container_name: pet-mysql-compose-container
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    ports:
-      - "13306:3306"
-    volumes:
-      - pet-mysql-data:/var/lib/mysql
-    networks:
-      - my-network
+  # db:
+  #   image: handonggil/pet-mysql:latest
+  #   container_name: pet-mysql-compose-container
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+  #     MYSQL_DATABASE: ${MYSQL_DATABASE}
+  #     MYSQL_USER: ${MYSQL_USER}
+  #     MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+  #   ports:
+  #     - "13306:3306"
+  #   volumes:
+  #     - pet-mysql-data:/var/lib/mysql
+  #   networks:
+  #     - my-network
 
   redis:
     image: handonggil/redis:latest
@@ -49,9 +49,9 @@ services:
     networks:
       - my-network
 
-volumes:
-  pet-mysql-data:
-    external: true # 기존 볼륨을 사용할 경우 true
+# volumes:
+#   pet-mysql-data:
+#     external: true # 기존 볼륨을 사용할 경우 true
 
 networks:
   my-network:
