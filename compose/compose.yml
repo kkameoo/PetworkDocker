@@ -1,11 +1,11 @@
 services:
-  frontend:
-    image: react-pet
-    container_name: pet-react-compose-container
-    ports:
-      - "5173:80"
-    networks:
-      - my-network
+  # frontend:
+  #   image: react-pet
+  #   container_name: pet-react-compose-container
+  #   ports:
+  #     - "5173:80"
+  #   networks:
+  #     - my-network
 
   api-server:
     image: spring-pet
